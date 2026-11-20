@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ClearSpend — Add, edit, filter, and back up your income and expense transactions.">
+    <title>ClearSpend | Transactions</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%232864e8'/%3E%3Ctext x='32' y='44' font-family='Arial,sans-serif' font-size='36' font-weight='800' text-anchor='middle' fill='white'%3EC%3C/text%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script>if (localStorage.getItem("clearSpendTheme") === "dark") document.documentElement.classList.add("dark-mode");</script>
+</head>
+<body>
+<div class="app-layout">
+    <aside class="sidebar">
+        <a class="brand" href="index.html"><span class="brand-mark">C</span><span>ClearSpend</span></a>
+        <p class="nav-label">MENU</p>
+        <nav class="side-nav">
+            <a class="nav-link" href="index.html"><span>▦</span> Dashboard</a>
+            <a class="nav-link active" href="transactions.html"><span>⇄</span> Transactions</a>
+            <a class="nav-link" href="budget.html"><span>◷</span> Budget</a>
+        </nav>
+        <div class="sidebar-bottom">
+            <div class="sidebar-tip"><span>✦</span><strong>Know where it goes.</strong><p>Keep a clear record of every rupee you earn and spend.</p></div>
+            <p class="sidebar-copy">ClearSpend © 2026</p>
+        </div>
+    </aside>
+
+    <main class="dashboard">
+        <header class="topbar">
+            <div><p class="eyebrow">YOUR MONEY</p><h1>Transactions</h1></div>
+            <div class="topbar-actions"><button class="theme-toggle" id="theme-toggle" type="button">🌙 Dark Mode</button><div class="profile">CS</div></div>
+        </header>
+
+        <section class="welcome compact-welcome">
+            <div><p class="welcome-label">TRANSACTION MANAGER</p><h2>Every rupee, accounted for.</h2><p>Add, search, filter, edit and manage your financial activity.</p></div>
+            <div class="welcome-symbol">⇄</div>
+        </section>
+
+        <section class="summary-grid small-summary">
+            <article class="summary-card"><div class="card-top"><span>Total Transactions</span><span class="card-icon">▤</span></div><h2 id="transaction-count">0</h2><p>All recorded transactions</p></article>
+            <article class="summary-card"><div class="card-top"><span>Total Income</span><span class="card-icon income-icon">↗</span></div><h2 id="transaction-income">PKR 0</h2><p>Money received</p></article>
+            <article class="summary-card"><div class="card-top"><span>Total Expenses</span><span class="card-icon expense-icon">↘</span></div><h2 id="transaction-expenses">PKR 0</h2><p>Money spent</p></article>
+        </section>
+
+        <section class="panel form-panel">
+            <div class="section-heading"><div><h2 id="form-title">Add a transaction</h2><p id="form-subtitle">Enter the details below to record your activity.</p></div><span class="panel-icon">＋</span></div>
+            <form id="transaction-form" class="transaction-form">
+                <div class="form-grid">
+                    <label>Description<input type="text" id="description" placeholder="e.g. University fees" maxlength="60" required></label>
+                    <label>Amount (PKR)<input type="number" id="amount" placeholder="e.g. 5000" min="1" step="0.01" required></label>
+                    <label>Type<select id="type" required><option value="Expense">Expense</option><option value="Income">Income</option></select></label>
+                    <label>Category<select id="category" required><option value="Food">Food</option><option value="Travel">Travel</option><option value="Education">Education</option><option value="Shopping">Shopping</option><option value="Bills">Bills</option><option value="Health">Health</option><option value="Entertainment">Entertainment</option><option value="Other">Other</option></select></label>
+                    <label>Payment Method<select id="payment-method" required><option value="Cash">Cash</option><option value="JazzCash">JazzCash</option><option value="Easypaisa">Easypaisa</option><option value="Bank / Card">Bank / Card</option></select></label>
+                    <label>Date<input type="date" id="transaction-date" required></label>
+                </div>
+                <div class="form-actions">
+                    <button class="primary-button" id="form-submit" type="submit">＋ Save transaction</button>
+                    <button class="secondary-button" id="cancel-edit" type="button" hidden>Cancel</button>
+                </div>
+                <p id="form-message" class="form-message" aria-live="polite"></p>
+            </form>
+        </section>
+
+        <section class="panel activity-panel">
+            <div class="section-heading"><div><h2>All transactions</h2><p>Search, filter, sort, edit or delete your financial records.</p></div><span class="panel-tag" id="filtered-count">0 RECORDS</span></div>
+            <div class="filter-row">
+                <input type="search" id="transaction-search" aria-label="Search transactions" placeholder="⌕  Search description, category or wallet...">
+                <select id="filter-type" aria-label="Filter by type"><option value="All">All types</option><option value="Income">Income</option><option value="Expense">Expense</option></select>
+                <select id="filter-category" aria-label="Filter by category"><option value="All">All categories</option></select>
+                <select id="filter-method" aria-label="Filter by payment method"><option value="All">All wallets</option><option value="Cash">Cash</option><option value="JazzCash">JazzCash</option><option value="Easypaisa">Easypaisa</option><option value="Bank / Card">Bank / Card</option></select>
+                <select id="filter-month" aria-label="Filter by month"><option value="All">All months</option></select>
+                <select id="sort-by" aria-label="Sort transactions"><option value="newest">Newest first</option><option value="oldest">Oldest first</option><option value="highest">Highest amount</option><option value="lowest">Lowest amount</option></select>
+                <button class="secondary-button" id="clear-filters" type="button">Reset</button>
+            </div>
+            <div id="transaction-list" class="transaction-list"><p class="empty-state">No transactions yet. Add your first transaction above.</p></div>
+        </section>
+
+        <section class="panel backup-panel">
+            <div class="section-heading"><div><h2>Backup, restore &amp; demo data</h2><p>Export to Excel (CSV), download or restore a full backup, or load sample transactions for testing.</p></div><span class="panel-icon">⇩</span></div>
+            <div class="backup-actions">
+                <button class="secondary-button" id="export-csv" type="button">⇩ Export CSV (Excel)</button>
+                <button class="secondary-button" id="export-json" type="button">⇩ Download backup (.json)</button>
+                <button class="secondary-button" id="import-button" type="button">⇧ Restore backup</button>
+                <button class="secondary-button" id="load-sample" type="button" data-load-sample>✦ Load sample data</button>
+                <button class="delete-button" id="clear-all-data" type="button">✕ Clear all data</button>
+                <input type="file" id="import-file" accept=".json,application/json" hidden>
+            </div>
+            <p id="backup-message" class="form-message" aria-live="polite"></p>
+        </section>
+        <footer>© 2026 ClearSpend. Manage your money with confidence.</footer>
+    </main>
+</div>
+<script src="script.js"></script>
+</body>
+</html>

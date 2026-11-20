@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ClearSpend — Set monthly and per-category budgets and review your spending breakdown.">
+    <title>ClearSpend | Budget</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%232864e8'/%3E%3Ctext x='32' y='44' font-family='Arial,sans-serif' font-size='36' font-weight='800' text-anchor='middle' fill='white'%3EC%3C/text%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script>if (localStorage.getItem("clearSpendTheme") === "dark") document.documentElement.classList.add("dark-mode");</script>
+</head>
+<body>
+<div class="app-layout">
+    <aside class="sidebar">
+        <a class="brand" href="index.html"><span class="brand-mark">C</span><span>ClearSpend</span></a>
+        <p class="nav-label">MENU</p>
+        <nav class="side-nav">
+            <a class="nav-link" href="index.html"><span>▦</span> Dashboard</a>
+            <a class="nav-link" href="transactions.html"><span>⇄</span> Transactions</a>
+            <a class="nav-link active" href="budget.html"><span>◷</span> Budget</a>
+        </nav>
+        <div class="sidebar-bottom">
+            <div class="sidebar-tip"><span>✦</span><strong>Plan before you spend.</strong><p>A realistic budget helps you make confident decisions.</p></div>
+            <p class="sidebar-copy">ClearSpend © 2026</p>
+        </div>
+    </aside>
+
+    <main class="dashboard">
+        <header class="topbar">
+            <div><p class="eyebrow">PLAN YOUR SPENDING</p><h1>Budget</h1></div>
+            <div class="topbar-actions">
+                <button class="secondary-button print-button" type="button" data-print-report>🖨️ Print report</button>
+                <button class="theme-toggle" id="theme-toggle" type="button">🌙 Dark Mode</button>
+                <div class="profile">CS</div>
+            </div>
+        </header>
+
+        <section class="welcome compact-welcome">
+            <div><p class="welcome-label">MONTHLY FINANCIAL PLAN</p><h2>Make your money work smarter.</h2><p>Set a monthly limit, add category limits and keep your spending on track.</p></div>
+            <div class="welcome-symbol">◷</div>
+        </section>
+
+        <div class="month-bar">
+            <p class="month-bar-title">Viewing budget for</p>
+            <div class="month-picker">
+                <button class="month-button" type="button" data-month-step="-1" aria-label="Previous month">◀</button>
+                <span class="month-label">This Month</span>
+                <button class="month-button" type="button" data-month-step="1" aria-label="Next month">▶</button>
+                <button class="secondary-button month-reset" type="button" data-month-reset hidden>Today</button>
+            </div>
+        </div>
+
+        <section class="summary-grid">
+            <article class="summary-card"><div class="card-top"><span>Monthly Budget</span><span class="card-icon">◎</span></div><h2 id="budget-limit">PKR 0</h2><p>Your spending limit</p></article>
+            <article class="summary-card"><div class="card-top"><span>Amount Spent</span><span class="card-icon expense-icon">↘</span></div><h2 id="budget-spent">PKR 0</h2><p>Selected month expenses</p></article>
+            <article class="summary-card"><div class="card-top"><span>Remaining</span><span class="card-icon income-icon">✓</span></div><h2 id="budget-remaining">PKR 0</h2><p>Budget left to spend</p></article>
+        </section>
+
+        <section class="content-grid">
+            <article class="panel budget-setup">
+                <div class="section-heading"><div><h2>Set your monthly budget</h2><p>Choose the maximum total amount you want to spend per month.</p></div><span class="panel-icon">⚙</span></div>
+                <form id="budget-form" class="budget-form">
+                    <label for="monthly-budget">Monthly budget amount (PKR)</label>
+                    <div class="budget-input-row"><input type="number" id="monthly-budget" min="1" step="0.01" placeholder="e.g. 45000" required><button class="primary-button" type="submit">Save budget</button></div>
+                    <p id="budget-form-message" class="form-message" aria-live="polite"></p>
+                </form>
+            </article>
+
+            <article class="panel budget-setup">
+                <div class="section-heading"><div><h2>Category budget limits</h2><p>Set an optional monthly cap for any expense category (enter 0 to remove).</p></div><span class="panel-icon">▤</span></div>
+                <form id="category-budget-form" class="budget-form">
+                    <div class="category-budget-row">
+                        <label>Category
+                            <select id="category-budget-name" required>
+                                <option value="Food">Food</option>
+                                <option value="Travel">Travel</option>
+                                <option value="Education">Education</option>
+                                <option value="Shopping">Shopping</option>
+                                <option value="Bills">Bills</option>
+                                <option value="Health">Health</option>
+                                <option value="Entertainment">Entertainment</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </label>
+                        <label>Monthly limit (PKR)
+                            <input type="number" id="category-budget-amount" min="0" step="0.01" placeholder="e.g. 10000" required>
+                        </label>
+                    </div>
+                    <div class="form-actions">
+                        <button class="primary-button" type="submit">Save category limit</button>
+                        <button class="secondary-button" id="clear-category-budget" type="button">Remove limit</button>
+                    </div>
+                    <p id="category-budget-message" class="form-message" aria-live="polite"></p>
+                </form>
+            </article>
+        </section>
+
+        <section class="content-grid">
+            <article class="panel">
+                <div class="section-heading"><div><h2>Budget progress</h2><p>How much of your budget you have used</p></div><span class="panel-tag month-tag">THIS MONTH</span></div>
+                <div class="large-progress-number" id="budget-percent">0%</div>
+                <p class="muted" id="budget-message">Set a budget to start tracking your progress.</p>
+                <div class="progress-track large-track"><div id="budget-progress-fill" class="progress-fill"></div></div>
+                <div class="progress-labels"><span id="progress-spent-label">Spent: PKR 0</span><span id="progress-limit-label">Limit: PKR 0</span></div>
+            </article>
+            <article class="panel">
+                <div class="section-heading"><div><h2>Smart spending tips</h2><p>Simple ways to stay in control</p></div><span class="panel-icon">✦</span></div>
+                <ul class="tips-list">
+                    <li><span>01</span><div><strong>Track every expense</strong><p>Record small purchases as well as large ones.</p></div></li>
+                    <li><span>02</span><div><strong>Set category caps</strong><p>Put limits on Food, Shopping or Travel to catch overspending early.</p></div></li>
+                    <li><span>03</span><div><strong>Keep a safety margin</strong><p>Avoid planning to spend your entire budget.</p></div></li>
+                </ul>
+            </article>
+        </section>
+
+        <section class="panel activity-panel">
+            <div class="section-heading"><div><h2>Spending by category</h2><p>Expenses and category limits for the selected month</p></div><span class="panel-tag month-tag">THIS MONTH</span></div>
+            <div id="category-report" class="category-report"><p class="empty-state">Your category report will appear when you add expenses.</p></div>
+        </section>
+        <footer>© 2026 ClearSpend. Manage your money with confidence.</footer>
+    </main>
+</div>
+<script src="script.js"></script>
+</body>
+</html>
